@@ -14,6 +14,8 @@
 
 ## 安装
 
+**快速开始：** 详细安装步骤请查看 [INSTALLATION.md](INSTALLATION.md)
+
 ### 前置要求
 
 - **REAPER 6.0+**（推荐 7.0+）
@@ -21,16 +23,41 @@
 
 ### 通过 ReaPack 安装（推荐）
 
-1. 打开 REAPER
-2. 菜单：`Extensions` → `ReaPack` → `Import repositories...`
-3. 输入仓库地址：
-   ```
-   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/Reaper/SmartRegionManager/index.xml
-   ```
-4. 菜单：`Extensions` → `ReaPack` → `Browse packages`
-5. 搜索 `Smart Region Manager`
-6. 右键 → `Install`
-7. 重启 REAPER
+**重要说明：**
+- 这个脚本**不会**出现在 ReaPack 的默认仓库中
+- 您需要**先添加自定义仓库**，然后才能搜索和安装
+- 链接 `https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/Reaper/SmartRegionManager/index.xml` 是给 ReaPack 使用的，不是直接在浏览器打开的
+
+**详细安装步骤：**
+
+1. **打开 REAPER**
+
+2. **添加仓库**
+   - 菜单：`Extensions` → `ReaPack` → `Import repositories...`
+   - 会弹出一个对话框，在输入框中粘贴以下地址：
+     ```
+     https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/Reaper/SmartRegionManager/index.xml
+     ```
+   - 点击 `OK` 确认
+
+3. **同步仓库**
+   - 菜单：`Extensions` → `ReaPack` → `Synchronize packages`
+   - 等待同步完成（会显示同步进度）
+
+4. **搜索并安装**
+   - 菜单：`Extensions` → `ReaPack` → `Browse packages`
+   - 在搜索框中输入：`Smart Region Manager`
+   - 找到后，右键点击 → `Install`
+   - 或者双击条目进行安装
+
+5. **重启 REAPER**
+   - 安装完成后，重启 REAPER 使脚本生效
+
+**如果搜索不到：**
+- 确认已执行步骤 2（添加仓库）
+- 确认已执行步骤 3（同步仓库）
+- 尝试在搜索框中输入：`Smart` 或 `Region Manager`
+- 检查仓库是否正确添加：`Extensions` → `ReaPack` → `Manage repositories`，应该能看到 `SmartRegionManager` 仓库
 
 ### 安装 ReaImGui（如果尚未安装）
 
