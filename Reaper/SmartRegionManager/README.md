@@ -6,7 +6,9 @@
 
 管理 Region 声道设置并批量导出音频的 REAPER 脚本工具。
 
-![Smart Region Manager Screenshot](https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/screenshot.png)
+| Light Theme | Dark Theme |
+|:-----------:|:----------:|
+| ![Light](screenshots/screenshot_light.png) | ![Dark](screenshots/screenshot_dark.png) |
 
 ## 功能特点
 
