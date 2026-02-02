@@ -49,6 +49,7 @@
 
 **更新脚本：**
 - 运行 `update.bat` 快速更新到最新版本
+- 详细更新指南请查看 [UPDATE_GUIDE.md](UPDATE_GUIDE.md)
 
 ### 手动安装（备用）
 
@@ -59,6 +60,23 @@
 2. 菜单：`Actions` → `Show action list`
 3. 点击 `New action...` → `Load ReaScript...`
 4. 选择 `SmartRegionManager.lua`
+
+## 更新
+
+### 通过 ReaPack 更新（推荐）
+
+1. 打开 REAPER
+2. 菜单：`Extensions` → `ReaPack` → `Synchronize packages`
+3. 如果有更新可用，点击 `Apply`
+4. 重启 REAPER
+
+**提示：** 可以设置自动同步：`Extensions` → `ReaPack` → `Preferences` → 勾选 `Auto-sync on startup`
+
+### 其他更新方法
+
+- **Windows 用户**：运行 `update.bat` 脚本
+- **手动更新**：下载最新版本并替换文件
+- **详细指南**：查看 [UPDATE_GUIDE.md](UPDATE_GUIDE.md)
 
 ## 使用方法
 
