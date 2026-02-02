@@ -32,14 +32,63 @@ if not has_imgui then
     return
 end
 
--- Script path for loading modules
-local script_path = debug.getinfo(1, "S").source:match("@(.+[\\/])")
+-- Get script path with multiple fallback methods
+local function get_script_path()
+    local info = debug.getinfo(1, "S")
+    if not info or not info.source then return nil end
+    
+    local source = info.source
+    -- Remove @ prefix if present
+    if source:sub(1, 1) == "@" then
+        source = source:sub(2)
+    end
+    
+    -- Extract directory path
+    -- Try Windows path first, then Unix
+    local path = source:match("(.+[\\/])") or source:match("(.+/)")
+    return path
+end
 
--- Load modules
-dofile(script_path .. "modules/config.lua")
-dofile(script_path .. "modules/region_manager.lua")
-dofile(script_path .. "modules/render_engine.lua")
-dofile(script_path .. "modules/gui.lua")
+local script_path = get_script_path()
+if not script_path then
+    reaper.ShowMessageBox(
+        "Could not determine script location.\n\n" ..
+        "Please reinstall the script via ReaPack.",
+        "Script Error", 0)
+    return
+end
+
+-- Normalize path separator for current OS
+local sep = package.config:sub(1,1) -- Gets OS path separator
+local function normalize_path(path)
+    if sep == "\\" then
+        return path:gsub("/", "\\")
+    else
+        return path:gsub("\\", "/")
+    end
+end
+
+-- Load modules with error handling
+local function load_module(name)
+    local path = normalize_path(script_path .. "modules/" .. name .. ".lua")
+    local chunk, err = loadfile(path)
+    if not chunk then
+        reaper.ShowMessageBox(
+            "Failed to load module: " .. name .. "\n\n" ..
+            "Path: " .. path .. "\n\n" ..
+            "Error: " .. (err or "unknown"),
+            "Module Load Error", 0)
+        return false
+    end
+    chunk()
+    return true
+end
+
+-- Load all required modules
+if not load_module("config") then return end
+if not load_module("region_manager") then return end
+if not load_module("render_engine") then return end
+if not load_module("gui") then return end
 
 -- Initialize
 local ctx = reaper.ImGui_CreateContext("Smart Region Manager")
