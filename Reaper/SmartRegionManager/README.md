@@ -1,152 +1,102 @@
-# Smart Region Manager for Reaper
+# Smart Region Manager for REAPER
 
-管理 Region 声道设置并自动导出匹配格式音频的 Reaper 脚本工具。
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/AlgernonMXF/SmartRegionManager)
+[![REAPER](https://img.shields.io/badge/REAPER-6.0+-green.svg)](https://www.reaper.fm/)
+[![License](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
+
+管理 Region 声道设置并批量导出音频的 REAPER 脚本工具。
+
+![Smart Region Manager Screenshot](https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/screenshot.png)
 
 ## 功能特点
 
-- 显示项目中所有 Region 列表，包含名称、时间、时长等信息
-- 为每个 Region 单独设置声道模式（Mono/Stereo）
-- 批量操作：全选、批量设置声道模式
-- 一键渲染选中的 Region，自动应用对应的声道设置
-- 可选命名后缀（如 `_Mono`、`_Stereo`）
-- 深色/浅色主题支持（自动匹配 REAPER 主题）
-- 设置自动保存在项目文件中
+- **Region 管理** - 显示项目中所有 Region，包含名称、时间、时长等信息
+- **声道设置** - 为每个 Region 单独设置声道模式（Mono/Stereo）
+- **批量操作** - 全选、批量设置声道模式
+- **一键渲染** - 自动应用对应的声道设置导出音频
+- **命名后缀** - 可选添加 `_Mono`、`_Stereo` 后缀
+- **主题适配** - 自动匹配 REAPER 深色/浅色主题
+- **设置持久化** - 自动保存在项目文件中
 
 ## 安装
 
-**快速开始：** 详细安装步骤请查看 [INSTALLATION.md](INSTALLATION.md)
-
 ### 前置要求
 
-- **REAPER 6.0+**（推荐 7.0+）
-- **ReaImGui 扩展**
+- REAPER 6.0+（推荐 7.0+）
+- ReaImGui 扩展
 
 ### 通过 ReaPack 安装（推荐）
 
-**重要说明：**
-- 这个脚本**不会**出现在 ReaPack 的默认仓库中
-- 您需要**先添加自定义仓库**，然后才能搜索和安装
-- 链接 `https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/Reaper/SmartRegionManager/index.xml` 是给 ReaPack 使用的，不是直接在浏览器打开的
+1. `Extensions` → `ReaPack` → `Import repositories...`
+2. 粘贴地址：
+   ```
+   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/Reaper/SmartRegionManager/index.xml
+   ```
+3. `Extensions` → `ReaPack` → `Synchronize packages`
+4. `Extensions` → `ReaPack` → `Browse packages` → 搜索 `Smart Region Manager` → 安装
+5. 重启 REAPER
 
-**详细安装步骤：**
+> 详细说明：[REAPACK_INSTALL.md](REAPACK_INSTALL.md)
 
-1. **打开 REAPER**
+### 其他安装方式
 
-2. **添加仓库**
-   - 菜单：`Extensions` → `ReaPack` → `Import repositories...`
-   - 会弹出一个对话框，在输入框中粘贴以下地址：
-     ```
-     https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/Reaper/SmartRegionManager/index.xml
-     ```
-   - 点击 `OK` 确认
+- **Windows 用户**：运行 `install.bat`
+- **手动安装**：复制到 REAPER Scripts 目录
 
-3. **同步仓库**
-   - 菜单：`Extensions` → `ReaPack` → `Synchronize packages`
-   - 等待同步完成（会显示同步进度）
-
-4. **搜索并安装**
-   - 菜单：`Extensions` → `ReaPack` → `Browse packages`
-   - 在搜索框中输入：`Smart Region Manager`
-   - 找到后，右键点击 → `Install`
-   - 或者双击条目进行安装
-
-5. **重启 REAPER**
-   - 安装完成后，重启 REAPER 使脚本生效
-
-**如果搜索不到：**
-- 确认已执行步骤 2（添加仓库）
-- 确认已执行步骤 3（同步仓库）
-- 尝试在搜索框中输入：`Smart` 或 `Region Manager`
-- 检查仓库是否正确添加：`Extensions` → `ReaPack` → `Manage repositories`，应该能看到 `SmartRegionManager` 仓库
-
-### 安装 ReaImGui（如果尚未安装）
-
-1. 菜单：`Extensions` → `ReaPack` → `Browse packages`
-2. 搜索 `ReaImGui`
-3. 右键 → `Install`
-4. 重启 REAPER
-
-### 使用安装脚本（Windows）
-
-1. 双击运行 `install.bat` 文件
-2. 按照提示完成安装
-3. 打开 REAPER，菜单：`Actions` → `Show action list`
-4. 点击 `New action...` → `Load ReaScript...`
-5. 选择 `Scripts\SmartRegionManager\SmartRegionManager.lua`
-
-**更新脚本：**
-- 运行 `update.bat` 快速更新到最新版本
-- 详细更新指南请查看 [UPDATE_GUIDE.md](UPDATE_GUIDE.md)
-
-### 手动安装（备用）
-
-1. 将 `SmartRegionManager` 文件夹复制到 REAPER Scripts 目录：
-   - Windows: `%APPDATA%\REAPER\Scripts\`
-   - macOS: `~/Library/Application Support/REAPER/Scripts/`
-   - Linux: `~/.config/REAPER/Scripts/`
-2. 菜单：`Actions` → `Show action list`
-3. 点击 `New action...` → `Load ReaScript...`
-4. 选择 `SmartRegionManager.lua`
-
-## 更新
-
-### 通过 ReaPack 更新（推荐）
-
-1. 打开 REAPER
-2. 菜单：`Extensions` → `ReaPack` → `Synchronize packages`
-3. 如果有更新可用，点击 `Apply`
-4. 重启 REAPER
-
-**提示：** 可以设置自动同步：`Extensions` → `ReaPack` → `Preferences` → 勾选 `Auto-sync on startup`
-
-### 其他更新方法
-
-- **Windows 用户**：运行 `update.bat` 脚本
-- **手动更新**：下载最新版本并替换文件
-- **详细指南**：查看 [UPDATE_GUIDE.md](UPDATE_GUIDE.md)
+> 完整指南：[INSTALLATION.md](INSTALLATION.md)
 
 ## 使用方法
 
-1. 运行脚本（通过 Action List 或快捷键）
+1. 在 Action List 中运行 `Smart Region Manager`
 2. 在窗口中查看 Region 列表
-3. 为每个 Region 选择声道模式
+3. 为每个 Region 选择声道模式（Mono/Stereo）
 4. 勾选需要导出的 Region
 5. 设置输出目录
-6. 点击 "Render Selected"
+6. 点击 **Render Selected**
 
-## 故障排除
+## 更新
 
-### 快速参考
+### ReaPack 更新
+
+```
+Extensions → ReaPack → Synchronize packages
+```
+
+### 本地更新（Windows）
+
+运行 `update.bat`
+
+## 文档
+
+| 文档 | 说明 |
+|------|------|
+| [INSTALLATION.md](INSTALLATION.md) | 完整安装指南 |
+| [REAPACK_INSTALL.md](REAPACK_INSTALL.md) | ReaPack 安装详解 |
+| [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | 故障排除 |
+| [DEVELOPMENT.md](DEVELOPMENT.md) | 开发者文档 |
+| [CHANGELOG.md](CHANGELOG.md) | 版本历史 |
+
+## 常见问题
 
 | 问题 | 解决方法 |
 |------|----------|
 | "Missing Dependency" 错误 | 安装 ReaImGui 扩展并重启 REAPER |
 | 窗口不显示 | 在 Action List 中重新运行脚本 |
 | 渲染无输出 | 确保选中了 Region 且输出目录有写入权限 |
-| 安装脚本报错 | 查看 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) 获取详细帮助 |
 
-### 详细故障排除
+更多问题请查看 [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
-遇到安装或运行时问题？请查看 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) 获取：
-- 详细的错误诊断步骤
-- 常见问题的解决方案
-- 手动安装备选方案
+## 反馈与支持
 
-## 版本历史
-
-### v1.0.2
-- 修复：Browse 按钮兼容性（不再依赖 JS_ReaScriptAPI）
-- 修复：主题检测兼容性
-
-### v1.0.1
-- 修复：选择状态在自动刷新时保持不变
-- 修复：启动时默认选中所有 Region
-- 修复：关闭窗口时的兼容性错误
-- 新增：深色/浅色主题支持
-
-### v1.0.0
-- 初始版本
+- **问题反馈**：[GitHub Issues](https://github.com/AlgernonMXF/SmartRegionManager/issues)
+- **功能建议**：欢迎提交 Issue 或 PR
 
 ## 许可证
 
-MIT License
+[MIT License](LICENSE)
+
+## 致谢
+
+- [ReaImGui](https://github.com/cfillion/reaimgui) - GUI 框架
+- [ReaPack](https://reapack.com/) - 包管理器
+- REAPER 社区

@@ -5,18 +5,18 @@
   with automatic channel configuration based on region settings.
   
   Author: Unicon
-  Version: 1.0.2
+  Version: 1.0.0
   Requires: Reaper 6.0+, ReaImGui extension
   
-  Changelog v1.0.2:
-  - Fixed: Browse button compatibility (no longer requires JS_ReaScriptAPI)
-  - Fixed: Theme detection fallback for unsupported themes
-  
-  Changelog v1.0.1:
-  - Fixed: Selection state preserved across auto-refresh
-  - Fixed: All regions selected by default on startup  
-  - Fixed: Close error (ImGui_DestroyContext compatibility)
-  - Added: Dark/Light theme support (auto-detects REAPER theme)
+  Changelog v1.0.0 - Initial Release:
+  - Region list display and management
+  - Per-region Mono/Stereo channel settings
+  - Batch operations (select all, batch set channel mode)
+  - One-click render with automatic channel configuration
+  - Optional naming suffix (_Mono, _Stereo)
+  - Settings persistence in project file
+  - Dark/Light theme support (auto-detects REAPER theme)
+  - Browse button compatibility (no longer requires JS_ReaScriptAPI extension)
 --]]
 
 -- Check for ReaImGui
