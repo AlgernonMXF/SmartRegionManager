@@ -4,7 +4,7 @@
   A tool to manage region channel settings (Mono/Stereo) and export audio files
   with automatic channel configuration based on region settings.
   
-  Author: AI Powered
+  Author: Unicon
   Version: 1.0.2
   Requires: Reaper 6.0+, ReaImGui extension
   
