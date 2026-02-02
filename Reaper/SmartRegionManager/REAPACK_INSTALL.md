@@ -40,9 +40,11 @@
 
 **这一步很关键，很多用户会跳过导致搜索不到！**
 
+#### 方法一：同步所有仓库（默认）
+
 1. **打开同步对话框**
    - `Extensions` → `ReaPack` → `Synchronize packages`
-   - 会显示同步进度
+   - 会同步所有已添加的仓库
 
 2. **等待同步完成**
    - 会显示 "Synchronizing..." 进度
@@ -51,6 +53,39 @@
 3. **检查同步结果**
    - 如果成功：会显示 "Synchronized X packages" 或类似信息
    - 如果失败：会显示错误信息（见下面的"常见错误"）
+
+#### 方法二：只同步 SmartRegionManager 仓库（推荐）
+
+如果您添加了多个仓库，只想同步 SmartRegionManager，可以使用以下方法：
+
+**选项 A：在包浏览器中直接更新**
+
+1. **打开包浏览器**
+   - `Extensions` → `ReaPack` → `Browse packages`
+
+2. **搜索 Smart Region Manager**
+   - 在搜索框中输入：`Smart Region Manager`
+
+3. **右键点击包**
+   - 右键点击 `Smart Region Manager` 条目
+   - 选择 `Reinstall` 或 `Update`（如果有更新）
+   - 这会只更新这个特定的包，不会同步其他仓库
+
+**选项 B：临时禁用其他仓库（如果只想同步 SmartRegionManager）**
+
+1. **打开仓库管理**
+   - `Extensions` → `ReaPack` → `Manage repositories`
+
+2. **禁用其他仓库**
+   - 取消勾选其他不需要同步的仓库
+   - 只保留 `SmartRegionManager` 仓库启用
+
+3. **执行同步**
+   - `Extensions` → `ReaPack` → `Synchronize packages`
+   - 现在只会同步 SmartRegionManager 仓库
+
+4. **重新启用其他仓库**（可选）
+   - 同步完成后，可以重新启用其他仓库
 
 ### 步骤 3：搜索并安装
 
@@ -249,6 +284,16 @@ https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/Reaper/Sma
 3. ✅ 搜索 `Smart Region Manager`
 4. ✅ 运行脚本
 5. ✅ 应该能看到 "Smart Region Manager" 窗口
+
+## 只同步 SmartRegionManager 仓库
+
+如果您添加了多个仓库，只想同步 SmartRegionManager，请查看：
+- **[REAPACK_SYNC.md](REAPACK_SYNC.md)** - 详细的同步指南
+
+**快速方法：**
+- `Extensions` → `ReaPack` → `Browse packages`
+- 搜索 `Smart Region Manager`
+- 右键点击 → `Reinstall` 或 `Update`
 
 ## 获取帮助
 
