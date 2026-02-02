@@ -5,7 +5,7 @@
   with automatic channel configuration based on region settings.
   
   Author: Unicon
-  Version: 1.0.2
+  Version: 1.0.5
   Requires: Reaper 6.0+, ReaImGui extension
 --]]
 

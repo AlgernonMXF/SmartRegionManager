@@ -210,6 +210,18 @@ local function get_theme_button_label()
     end
 end
 
+-- Safe color index getter (returns nil if function doesn't exist)
+local function get_color_index(func_name)
+    local func = reaper["ImGui_Col_" .. func_name]
+    if func then
+        local success, idx = pcall(func)
+        if success and idx and idx >= 0 then
+            return idx
+        end
+    end
+    return nil
+end
+
 -- Apply theme colors
 local function apply_theme(ctx)
     -- Pop previous colors if any
@@ -222,162 +234,50 @@ local function apply_theme(ctx)
     current_theme = detect_theme()
     local theme = THEMES[current_theme]
     
-    -- Apply colors
-    local function push_color(idx_func, color)
-        if idx_func then
-            local success, idx = pcall(idx_func)
-            if success and idx and idx >= 0 then
+    -- Color mapping: ImGui color name -> theme key
+    local color_map = {
+        -- Window
+        "WindowBg", "PopupBg", "Border",
+        -- Text
+        "Text", "TextDisabled",
+        -- Headers
+        "Header", "HeaderHovered", "HeaderActive",
+        -- Buttons
+        "Button", "ButtonHovered", "ButtonActive",
+        -- Frame (inputs, combo boxes)
+        "FrameBg", "FrameBgHovered", "FrameBgActive",
+        -- Tables
+        "TableHeaderBg", "TableRowBg", "TableRowBgAlt", "TableBorderStrong", "TableBorderLight",
+        -- Checkboxes
+        "CheckMark",
+        -- Scrollbar
+        "ScrollbarBg", "ScrollbarGrab", "ScrollbarGrabHovered", "ScrollbarGrabActive",
+        -- Separator
+        "Separator",
+        -- Title bar
+        "TitleBg", "TitleBgActive", "TitleBgCollapsed",
+        -- Child windows
+        "ChildBg",
+        -- Menu bar
+        "MenuBarBg",
+        -- Resize grips
+        "ResizeGrip", "ResizeGripHovered", "ResizeGripActive",
+        -- Slider
+        "SliderGrab", "SliderGrabActive",
+        -- Tab
+        "Tab", "TabHovered", "TabActive", "TabUnfocused", "TabUnfocusedActive",
+    }
+    
+    -- Apply all colors
+    for _, name in ipairs(color_map) do
+        local color = theme[name]
+        if color then
+            local idx = get_color_index(name)
+            if idx then
                 reaper.ImGui_PushStyleColor(ctx, idx, color)
                 theme_colors_pushed = theme_colors_pushed + 1
             end
         end
-    end
-    
-    -- Window
-    push_color(function() return reaper.ImGui_Col_WindowBg() end, theme.WindowBg)
-    push_color(function() return reaper.ImGui_Col_PopupBg() end, theme.PopupBg)
-    push_color(function() return reaper.ImGui_Col_Border() end, theme.Border)
-    
-    -- Text
-    push_color(function() return reaper.ImGui_Col_Text() end, theme.Text)
-    push_color(function() return reaper.ImGui_Col_TextDisabled() end, theme.TextDisabled)
-    
-    -- Headers
-    push_color(function() return reaper.ImGui_Col_Header() end, theme.Header)
-    push_color(function() return reaper.ImGui_Col_HeaderHovered() end, theme.HeaderHovered)
-    push_color(function() return reaper.ImGui_Col_HeaderActive() end, theme.HeaderActive)
-    
-    -- Buttons
-    push_color(function() return reaper.ImGui_Col_Button() end, theme.Button)
-    push_color(function() return reaper.ImGui_Col_ButtonHovered() end, theme.ButtonHovered)
-    push_color(function() return reaper.ImGui_Col_ButtonActive() end, theme.ButtonActive)
-    
-    -- Frame
-    push_color(function() return reaper.ImGui_Col_FrameBg() end, theme.FrameBg)
-    push_color(function() return reaper.ImGui_Col_FrameBgHovered() end, theme.FrameBgHovered)
-    push_color(function() return reaper.ImGui_Col_FrameBgActive() end, theme.FrameBgActive)
-    
-    -- Tables
-    push_color(function() return reaper.ImGui_Col_TableHeaderBg() end, theme.TableHeaderBg)
-    push_color(function() return reaper.ImGui_Col_TableRowBg() end, theme.TableRowBg)
-    push_color(function() return reaper.ImGui_Col_TableRowBgAlt() end, theme.TableRowBgAlt)
-    push_color(function() return reaper.ImGui_Col_TableBorderStrong() end, theme.TableBorderStrong)
-    push_color(function() return reaper.ImGui_Col_TableBorderLight() end, theme.TableBorderLight)
-    
-    -- Checkboxes
-    push_color(function() return reaper.ImGui_Col_CheckMark() end, theme.CheckMark)
-    
-    -- Scrollbar
-    push_color(function() return reaper.ImGui_Col_ScrollbarBg() end, theme.ScrollbarBg)
-    push_color(function() return reaper.ImGui_Col_ScrollbarGrab() end, theme.ScrollbarGrab)
-    push_color(function() return reaper.ImGui_Col_ScrollbarGrabHovered() end, theme.ScrollbarGrabHovered)
-    push_color(function() return reaper.ImGui_Col_ScrollbarGrabActive() end, theme.ScrollbarGrabActive)
-    
-    -- Separator
-    push_color(function() return reaper.ImGui_Col_Separator() end, theme.Separator)
-    
-    -- Title bar
-    push_color(function() return reaper.ImGui_Col_TitleBg() end, theme.TitleBg)
-    push_color(function() return reaper.ImGui_Col_TitleBgActive() end, theme.TitleBgActive)
-    if theme.TitleBgCollapsed then
-        push_color(function() 
-            if reaper.ImGui_Col_TitleBgCollapsed then
-                return reaper.ImGui_Col_TitleBgCollapsed()
-            end
-            return nil
-        end, theme.TitleBgCollapsed)
-    end
-    
-    -- Child windows
-    if theme.ChildBg then
-        push_color(function() 
-            if reaper.ImGui_Col_ChildBg then
-                return reaper.ImGui_Col_ChildBg()
-            end
-            return nil
-        end, theme.ChildBg)
-    end
-    
-    -- Menu bar
-    if theme.MenuBarBg then
-        push_color(function() 
-            if reaper.ImGui_Col_MenuBarBg then
-                return reaper.ImGui_Col_MenuBarBg()
-            end
-            return nil
-        end, theme.MenuBarBg)
-    end
-    
-    -- Resize grips
-    if theme.ResizeGrip then
-        push_color(function() 
-            if reaper.ImGui_Col_ResizeGrip then
-                return reaper.ImGui_Col_ResizeGrip()
-            end
-            return nil
-        end, theme.ResizeGrip)
-        push_color(function() 
-            if reaper.ImGui_Col_ResizeGripHovered then
-                return reaper.ImGui_Col_ResizeGripHovered()
-            end
-            return nil
-        end, theme.ResizeGripHovered)
-        push_color(function() 
-            if reaper.ImGui_Col_ResizeGripActive then
-                return reaper.ImGui_Col_ResizeGripActive()
-            end
-            return nil
-        end, theme.ResizeGripActive)
-    end
-    
-    -- Slider
-    if theme.SliderGrab then
-        push_color(function() 
-            if reaper.ImGui_Col_SliderGrab then
-                return reaper.ImGui_Col_SliderGrab()
-            end
-            return nil
-        end, theme.SliderGrab)
-        push_color(function() 
-            if reaper.ImGui_Col_SliderGrabActive then
-                return reaper.ImGui_Col_SliderGrabActive()
-            end
-            return nil
-        end, theme.SliderGrabActive)
-    end
-    
-    -- Tab
-    if theme.Tab then
-        push_color(function() 
-            if reaper.ImGui_Col_Tab then
-                return reaper.ImGui_Col_Tab()
-            end
-            return nil
-        end, theme.Tab)
-        push_color(function() 
-            if reaper.ImGui_Col_TabHovered then
-                return reaper.ImGui_Col_TabHovered()
-            end
-            return nil
-        end, theme.TabHovered)
-        push_color(function() 
-            if reaper.ImGui_Col_TabActive then
-                return reaper.ImGui_Col_TabActive()
-            end
-            return nil
-        end, theme.TabActive)
-        push_color(function() 
-            if reaper.ImGui_Col_TabUnfocused then
-                return reaper.ImGui_Col_TabUnfocused()
-            end
-            return nil
-        end, theme.TabUnfocused)
-        push_color(function() 
-            if reaper.ImGui_Col_TabUnfocusedActive then
-                return reaper.ImGui_Col_TabUnfocusedActive()
-            end
-            return nil
-        end, theme.TabUnfocusedActive)
     end
 end
 
@@ -410,50 +310,96 @@ local function save_output_directory(dir)
     end
 end
 
+-- Clean and normalize a path (Windows-specific fixes)
+local function clean_path(path)
+    if not path or path == "" then return "" end
+    
+    local os_name = reaper.GetOS() or ""
+    local is_windows = os_name:find("Win") ~= nil
+    
+    -- Remove whitespace and newlines
+    path = path:match("^%s*(.-)%s*$") or ""
+    path = path:gsub("[\r\n]+", "")
+    
+    if is_windows then
+        -- Normalize separators
+        path = path:gsub("/", "\\")
+        -- Fix duplicate drive letters (e.g., "D:\C:\Users\..." -> "C:\Users\...")
+        local last_pos = nil
+        for pos in path:gmatch("()[A-Za-z]:\\") do
+            last_pos = pos
+        end
+        if last_pos and last_pos > 1 then
+            path = path:sub(last_pos)
+        end
+    end
+    
+    return path
+end
+
 -- Open folder in file explorer (cross-platform)
 local function open_folder_in_explorer(folder_path)
-    if folder_path == "" or folder_path == nil then
+    if not folder_path or folder_path == "" then
         return false
     end
 
-    -- Trim surrounding whitespace
-    folder_path = folder_path:match("^%s*(.-)%s*$")
+    -- Trim surrounding whitespace and newlines
+    folder_path = folder_path:match("^%s*(.-)%s*$") or ""
+    folder_path = folder_path:gsub("[\r\n]+", "")
+    
+    if folder_path == "" then
+        return false
+    end
 
-    -- Prefer SWS ShellExecute if available (more reliable on Windows)
+    -- Detect OS
+    local os_name = reaper.GetOS() or ""
+    local is_windows = os_name:find("Win") ~= nil
+    
+    -- Normalize path separators
+    if is_windows then
+        folder_path = folder_path:gsub("/", "\\")
+        -- Remove trailing backslashes
+        folder_path = folder_path:gsub("\\+$", "")
+    end
+
+    -- Method 1: SWS CF_ShellExecute (most reliable)
     if reaper.CF_ShellExecute then
         reaper.CF_ShellExecute(folder_path)
         return true
     end
     
-    -- Detect OS
-    local os_name = reaper.GetOS() or ""
-    local command = ""
-    
-    if os_name:find("Win") then
-        -- Windows: use cmd start to open folder reliably
-        -- Normalize path separators for Windows
-        folder_path = folder_path:gsub("/", "\\")
-        -- "start" needs a window title, so pass empty title ""
-        command = string.format('cmd.exe /C start "" "%s"', folder_path)
-    elseif os_name:find("OSX") then
-        -- macOS: use open command
-        command = string.format('open "%s"', folder_path)
-    else
-        -- Linux: use xdg-open
-        command = string.format('xdg-open "%s"', folder_path)
-    end
-    
-    -- Execute command
-    if reaper.ExecProcess then
-        reaper.ExecProcess(command, 0)
-        return true
-    else
-        -- Fallback: try using os.execute (less reliable)
-        if _G.os and _G.os.execute then
-            _G.os.execute(command)
+    -- Method 2: Use os.execute (works reliably on most systems)
+    if os and os.execute then
+        local command
+        if is_windows then
+            -- Windows: use explorer.exe directly (more reliable than cmd start)
+            command = string.format('explorer.exe "%s"', folder_path)
+        elseif os_name:find("OSX") then
+            -- macOS: use open command
+            command = string.format('open "%s"', folder_path)
+        else
+            -- Linux: use xdg-open
+            command = string.format('xdg-open "%s" &', folder_path)
         end
+        os.execute(command)
         return true
     end
+    
+    -- Method 3: Fallback to ExecProcess
+    if reaper.ExecProcess then
+        local command
+        if is_windows then
+            command = string.format('explorer.exe "%s"', folder_path)
+        elseif os_name:find("OSX") then
+            command = string.format('open "%s"', folder_path)
+        else
+            command = string.format('xdg-open "%s"', folder_path)
+        end
+        reaper.ExecProcess(command, 1000)  -- Small timeout
+        return true
+    end
+    
+    return false
 end
 
 -- Browse for folder (prefer native dialogs)
@@ -462,17 +408,15 @@ local function browse_for_folder(start_path)
     if reaper.JS_Dialog_BrowseForFolder then
         local retval, folder = reaper.JS_Dialog_BrowseForFolder("Select Output Directory", start_path or "")
         if retval == 1 then
-            return folder
+            return clean_path(folder)
         end
         return nil
     end
 
     local os_name = reaper.GetOS() or ""
-    local attempted_dialog = false
 
     -- Windows: use PowerShell FolderBrowserDialog via ExecProcess
     if os_name:find("Win") and reaper.ExecProcess then
-        attempted_dialog = true
         local ps_start = (start_path or ""):gsub('"', '""')
         local temp_path = (reaper.GetResourcePath() or "") .. "\\SmartRegionManager_browse_path.txt"
         local command = string.format(
@@ -484,30 +428,12 @@ local function browse_for_folder(start_path)
 
         local file = io.open(temp_path, "r")
         if file then
-            local selected = file:read("*a") or ""  -- Read all content
+            local selected = file:read("*a") or ""
             file:close()
-            if _G.os and _G.os.remove then
-                _G.os.remove(temp_path)
+            if os and os.remove then
+                os.remove(temp_path)
             end
-            -- Clean the path: remove whitespace, newlines, and any invalid characters
-            selected = selected:match("^%s*(.-)%s*$") or ""
-            -- Remove any trailing newlines or carriage returns
-            selected = selected:gsub("[\r\n]+", "")
-            -- Normalize Windows path separators
-            if os_name:find("Win") then
-                selected = selected:gsub("/", "\\")
-                -- Remove any duplicate drive letters (e.g., "D:\C:\Users\..." -> "C:\Users\...")
-                -- Find all positions of drive letters (e.g., "C:\", "D:\")
-                local drive_positions = {}
-                for pos, drive in selected:gmatch("()([A-Z]:\\)") do
-                    table.insert(drive_positions, {pos = pos, drive = drive})
-                end
-                -- If multiple drive letters found, keep only the last one
-                if #drive_positions > 1 then
-                    local last_pos = drive_positions[#drive_positions].pos
-                    selected = selected:sub(last_pos)
-                end
-            end
+            selected = clean_path(selected)
             if selected ~= "" then
                 return selected
             end
@@ -517,10 +443,9 @@ local function browse_for_folder(start_path)
 
     -- macOS: use AppleScript choose folder
     if os_name:find("OSX") and reaper.ExecProcess then
-        attempted_dialog = true
         local command = 'osascript -e "POSIX path of (choose folder)"'
-        local exit_code, output = reaper.ExecProcess(command, 30000)
-        local selected = output and output:match("^%s*(.-)%s*$") or ""
+        local _, output = reaper.ExecProcess(command, 30000)
+        local selected = clean_path(output or "")
         if selected ~= "" then
             return selected
         end
@@ -529,10 +454,9 @@ local function browse_for_folder(start_path)
 
     -- Linux: try zenity
     if reaper.ExecProcess then
-        attempted_dialog = true
         local command = 'zenity --file-selection --directory'
-        local exit_code, output = reaper.ExecProcess(command, 30000)
-        local selected = output and output:match("^%s*(.-)%s*$") or ""
+        local _, output = reaper.ExecProcess(command, 30000)
+        local selected = clean_path(output or "")
         if selected ~= "" then
             return selected
         end
@@ -540,12 +464,9 @@ local function browse_for_folder(start_path)
     end
 
     -- Fallback: Use GetUserInputs for manual path entry
-    if attempted_dialog then
-        return nil
-    end
     local retval, path = reaper.GetUserInputs("Output Directory", 1, "Path:,extrawidth=300", start_path or "")
     if retval then
-        return path
+        return clean_path(path)
     end
     return nil
 end
@@ -838,19 +759,6 @@ function GUI._draw_render_panel(ctx)
     if reaper.ImGui_Button(ctx, "Browse...##browse") then
         local selected = browse_for_folder(output_directory)
         if selected and selected ~= "" then
-            -- Clean the path before setting it
-            local os_name = reaper.GetOS() or ""
-            if os_name:find("Win") then
-                -- Remove any duplicate drive letters
-                local drive_positions = {}
-                for pos, drive in selected:gmatch("()([A-Z]:\\)") do
-                    table.insert(drive_positions, {pos = pos, drive = drive})
-                end
-                if #drive_positions > 1 then
-                    local last_pos = drive_positions[#drive_positions].pos
-                    selected = selected:sub(last_pos)
-                end
-            end
             output_directory = selected
             save_output_directory(selected)
         end
