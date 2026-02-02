@@ -116,11 +116,21 @@
 
 ## 故障排除
 
+### 快速参考
+
 | 问题 | 解决方法 |
 |------|----------|
 | "Missing Dependency" 错误 | 安装 ReaImGui 扩展并重启 REAPER |
 | 窗口不显示 | 在 Action List 中重新运行脚本 |
 | 渲染无输出 | 确保选中了 Region 且输出目录有写入权限 |
+| 安装脚本报错 | 查看 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) 获取详细帮助 |
+
+### 详细故障排除
+
+遇到安装或运行时问题？请查看 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) 获取：
+- 详细的错误诊断步骤
+- 常见问题的解决方案
+- 手动安装备选方案
 
 ## 版本历史
 

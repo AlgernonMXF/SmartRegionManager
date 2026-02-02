@@ -70,13 +70,31 @@ if exist "%TARGET_DIR%" (
 
 :: 创建目标目录
 mkdir "%TARGET_DIR%" 2>nul
+if errorlevel 1 (
+    echo ❌ 错误: 无法创建目标目录
+    echo    目录路径: %TARGET_DIR%
+    echo    请检查文件权限
+    pause
+    exit /b 1
+)
+
 mkdir "%TARGET_DIR%\modules" 2>nul
+if errorlevel 1 (
+    echo ❌ 错误: 无法创建 modules 子目录
+    echo    目录路径: %TARGET_DIR%\modules
+    echo    请检查文件权限
+    pause
+    exit /b 1
+)
 
 :: 复制文件
 echo 正在复制主脚本...
 copy "%SOURCE_DIR%SmartRegionManager.lua" "%TARGET_DIR%\" >nul
 if errorlevel 1 (
     echo ❌ 错误: 复制主脚本失败
+    echo    源文件: %SOURCE_DIR%SmartRegionManager.lua
+    echo    目标目录: %TARGET_DIR%\
+    echo    请检查文件权限和磁盘空间
     pause
     exit /b 1
 )
@@ -85,6 +103,9 @@ echo 正在复制模块文件...
 copy "%SOURCE_DIR%modules\*.lua" "%TARGET_DIR%\modules\" >nul
 if errorlevel 1 (
     echo ❌ 错误: 复制模块文件失败
+    echo    源目录: %SOURCE_DIR%modules\
+    echo    目标目录: %TARGET_DIR%\modules\
+    echo    请检查文件权限和磁盘空间
     pause
     exit /b 1
 )
