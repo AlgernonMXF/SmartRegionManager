@@ -19,6 +19,14 @@
   - Browse button compatibility (no longer requires JS_ReaScriptAPI extension)
 --]]
 
+-- Get script path at top level (must be done before any function calls)
+local script_info = debug.getinfo(1, "S")
+local script_source = script_info and script_info.source or ""
+if script_source:sub(1, 1) == "@" then
+    script_source = script_source:sub(2)
+end
+local script_path = script_source:match("(.+[\\/])") or script_source:match("(.+/)") or ""
+
 -- Check for ReaImGui
 local has_imgui = reaper.ImGui_GetVersion ~= nil
 if not has_imgui then
@@ -32,27 +40,11 @@ if not has_imgui then
     return
 end
 
--- Get script path with multiple fallback methods
-local function get_script_path()
-    local info = debug.getinfo(1, "S")
-    if not info or not info.source then return nil end
-    
-    local source = info.source
-    -- Remove @ prefix if present
-    if source:sub(1, 1) == "@" then
-        source = source:sub(2)
-    end
-    
-    -- Extract directory path
-    -- Try Windows path first, then Unix
-    local path = source:match("(.+[\\/])") or source:match("(.+/)")
-    return path
-end
-
-local script_path = get_script_path()
-if not script_path then
+-- Validate script path
+if script_path == "" then
     reaper.ShowMessageBox(
         "Could not determine script location.\n\n" ..
+        "Source: " .. (script_source or "nil") .. "\n\n" ..
         "Please reinstall the script via ReaPack.",
         "Script Error", 0)
     return
