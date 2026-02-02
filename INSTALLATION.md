@@ -25,9 +25,16 @@
 
 1. **添加仓库**
    - 菜单：`Extensions` → `ReaPack` → `Import repositories...`
-   - 粘贴以下地址：
+   - 粘贴以下地址（二选一）：
+   
+   **标准地址：**
    ```
    https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml
+   ```
+   
+   **带缓存刷新的地址（推荐）：**
+   ```
+   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml?ts=20260202
    ```
    - 点击 `OK`
 

@@ -30,9 +30,13 @@
 ### 通过 ReaPack 安装（推荐）
 
 1. `Extensions` → `ReaPack` → `Import repositories...`
-2. 粘贴地址：
+2. 粘贴地址（二选一）：
    ```
    https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml
+   ```
+   或使用带缓存刷新的地址（推荐）：
+   ```
+   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml?ts=20260202
    ```
 3. `Extensions` → `ReaPack` → `Synchronize packages`
 4. `Extensions` → `ReaPack` → `Browse packages` → 搜索 `Smart Region Manager` → 安装

@@ -7,9 +7,18 @@
 1. 打开 REAPER
 2. `Extensions` → `ReaPack` → `Import repositories...`
 3. 粘贴以下地址：
+
+   **标准地址：**
    ```
    https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml
    ```
+
+   **带缓存刷新的地址（推荐）：**
+   ```
+   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml?ts=20260202
+   ```
+   > 💡 带 `?ts=` 参数的地址可以绕过 CDN 缓存，确保每次同步都能获取最新版本。
+
 4. 点击 `OK`
 
 ### 2. 同步仓库
