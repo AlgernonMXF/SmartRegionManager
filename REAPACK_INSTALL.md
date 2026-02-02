@@ -8,7 +8,7 @@
 2. `Extensions` → `ReaPack` → `Import repositories...`
 3. 粘贴以下地址：
    ```
-   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/Reaper/SmartRegionManager/index.xml
+   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml
    ```
 4. 点击 `OK`
 
@@ -45,7 +45,7 @@
 ### 添加仓库失败？
 
 **网络问题：**
-- 在浏览器中打开 [index.xml 链接](https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/Reaper/SmartRegionManager/index.xml)
+- 在浏览器中打开 [index.xml 链接](https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml)
 - 如果无法打开，可能需要代理或 VPN
 - 也可以使用[手动安装方式](INSTALLATION.md#方式三手动安装)
 

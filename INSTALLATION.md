@@ -27,7 +27,7 @@
    - 菜单：`Extensions` → `ReaPack` → `Import repositories...`
    - 粘贴以下地址：
    ```
-   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/Reaper/SmartRegionManager/index.xml
+   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml
    ```
    - 点击 `OK`
 

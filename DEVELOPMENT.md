@@ -10,14 +10,17 @@ SmartRegionManager/
 │   ├── gui.lua                # ReaImGui 界面实现
 │   ├── region_manager.lua     # Region 数据管理
 │   └── render_engine.lua      # 渲染引擎、音频导出
+├── screenshots/               # 截图
 ├── index.xml                  # ReaPack 包描述文件
 ├── install.bat                # Windows 安装脚本
 ├── update.bat                 # Windows 更新脚本
-└── docs/
-    ├── README.md
-    ├── INSTALLATION.md
-    ├── REAPACK_INSTALL.md
-    └── TROUBLESHOOTING.md
+├── README.md
+├── INSTALLATION.md
+├── REAPACK_INSTALL.md
+├── TROUBLESHOOTING.md
+├── DEVELOPMENT.md
+├── CHANGELOG.md
+└── LICENSE
 ```
 
 ## 技术栈

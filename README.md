@@ -32,7 +32,7 @@
 1. `Extensions` → `ReaPack` → `Import repositories...`
 2. 粘贴地址：
    ```
-   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/Reaper/SmartRegionManager/index.xml
+   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml
    ```
 3. `Extensions` → `ReaPack` → `Synchronize packages`
 4. `Extensions` → `ReaPack` → `Browse packages` → 搜索 `Smart Region Manager` → 安装
