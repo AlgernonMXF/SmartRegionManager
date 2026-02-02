@@ -46,12 +46,63 @@ function RenderEngine.get_progress()
     return render_progress
 end
 
+-- Clean and normalize a path for the current OS
+function RenderEngine._clean_path(path)
+    if not path or path == "" then
+        return ""
+    end
+    
+    local os_name = reaper.GetOS() or ""
+    
+    if os_name:find("Win") then
+        -- Normalize to Windows path separators
+        path = path:gsub("/", "\\")
+        
+        -- Remove any duplicate drive letters (e.g., "D:\C:\Users\..." -> "C:\Users\...")
+        -- Find all positions of drive letters (e.g., "C:\", "D:\")
+        local drive_positions = {}
+        for pos, drive in path:gmatch("()([A-Za-z]:\\)") do
+            table.insert(drive_positions, {pos = pos, drive = drive})
+        end
+        
+        -- If multiple drive letters found, keep only the last one
+        if #drive_positions > 1 then
+            local last_pos = drive_positions[#drive_positions].pos
+            path = path:sub(last_pos)
+        end
+    end
+    
+    -- Trim whitespace
+    path = path:match("^%s*(.-)%s*$") or path
+    
+    return path
+end
+
+-- Extract just the filename from a path (removes any directory components)
+function RenderEngine._extract_filename(path)
+    if not path or path == "" then
+        return ""
+    end
+    
+    -- Remove any directory components (both / and \)
+    local filename = path:match("([^/\\]+)$") or path
+    return filename
+end
+
 -- Build output filename for a region
 function RenderEngine.build_filename(region, output_dir)
     local base_name = region.name
     
-    -- Clean filename (remove invalid characters)
+    -- If region name contains path separators, extract just the filename part
+    -- This prevents paths like "C:\Users\foo\sound.wav" becoming part of the filename
+    base_name = RenderEngine._extract_filename(base_name)
+    
+    -- Clean filename (remove invalid characters for filenames)
+    -- Note: We already removed path separators above, but double-check here
     base_name = base_name:gsub('[<>:"/\\|?*]', "_")
+    
+    -- Remove any remaining drive letter patterns that might be in the name
+    base_name = base_name:gsub("^[A-Za-z]_", "")
     
     -- Add channel suffix if enabled
     local suffix = Config.get_channel_suffix(region.channel_mode)
@@ -61,6 +112,9 @@ function RenderEngine.build_filename(region, output_dir)
     local filename = base_name .. suffix .. extension
     
     if output_dir and output_dir ~= "" then
+        -- Clean the output directory path
+        output_dir = RenderEngine._clean_path(output_dir)
+        
         -- Normalize path separators based on OS
         local os_name = reaper.GetOS() or ""
         if os_name:find("Win") then
@@ -126,6 +180,12 @@ function RenderEngine.render_region(region, output_dir)
     
     local success = true
     local error_msg = ""
+    local os_name = reaper.GetOS() or ""
+    
+    -- Clean the output directory first
+    if output_dir and output_dir ~= "" then
+        output_dir = RenderEngine._clean_path(output_dir)
+    end
     
     -- Begin undo block
     reaper.Undo_BeginBlock()
@@ -142,46 +202,46 @@ function RenderEngine.render_region(region, output_dir)
     local channel_count = RenderEngine._get_channel_count(region.channel_mode)
     reaper.GetSetProjectInfo(0, "RENDER_CHANNELS", channel_count, true)
     
-    -- Set output path
-    local filename = RenderEngine.build_filename(region, output_dir)
+    -- Build the filename (just the filename part, not the full path)
+    local base_name = region.name
+    base_name = RenderEngine._extract_filename(base_name)
+    base_name = base_name:gsub('[<>:"/\\|?*]', "_")
+    base_name = base_name:gsub("^[A-Za-z]_", "")  -- Remove any drive letter artifacts
     
-    -- Clean filename: remove any duplicate drive letters that might have been introduced
-    local os_name = reaper.GetOS() or ""
-    if os_name:find("Win") then
-        -- Remove any duplicate drive letters (e.g., "D:\C:\Users\..." -> "C:\Users\...")
-        local drive_positions = {}
-        for pos, drive in filename:gmatch("()([A-Z]:\\)") do
-            table.insert(drive_positions, {pos = pos, drive = drive})
-        end
-        -- If multiple drive letters found, keep only the last one
-        if #drive_positions > 1 then
-            local last_pos = drive_positions[#drive_positions].pos
-            filename = filename:sub(last_pos)
-        end
-    end
+    local suffix = Config.get_channel_suffix(region.channel_mode)
+    local extension = "." .. string.lower(Config.get("output_format") or "wav")
+    local pattern = base_name .. suffix .. extension
     
-    -- Split into directory and pattern
-    local dir, pattern = filename:match("(.+[/\\])(.+)")
-    if not dir then
-        dir = ""
-        pattern = filename
-    end
-    
-    -- Ensure RENDER_FILE is set to absolute path (not relative)
-    -- REAPER might prepend current working directory if path is relative
-    if os_name:find("Win") then
-        -- Ensure dir starts with drive letter for absolute path
-        if dir ~= "" and not dir:match("^[A-Z]:\\") then
-            -- If relative path, make it absolute based on output_dir
-            if output_dir and output_dir:match("^[A-Z]:\\") then
-                dir = output_dir:gsub("/", "\\")
-                if not dir:match("[\\]$") then
-                    dir = dir .. "\\"
-                end
+    -- Prepare directory path
+    local dir = ""
+    if output_dir and output_dir ~= "" then
+        dir = output_dir
+        if os_name:find("Win") then
+            dir = dir:gsub("/", "\\")
+            if not dir:match("[\\]$") then
+                dir = dir .. "\\"
+            end
+        else
+            if not dir:match("/$") then
+                dir = dir .. "/"
             end
         end
     end
     
+    -- Final sanity check: ensure pattern doesn't contain path separators or drive letters
+    pattern = RenderEngine._extract_filename(pattern)
+    pattern = pattern:gsub('[<>:"/\\|?*]', "_")
+    
+    -- Final sanity check: ensure directory doesn't have duplicate drive letters
+    if os_name:find("Win") and dir ~= "" then
+        dir = RenderEngine._clean_path(dir)
+        if not dir:match("[\\]$") then
+            dir = dir .. "\\"
+        end
+    end
+    
+    -- Set RENDER_FILE (directory) and RENDER_PATTERN (filename)
+    -- IMPORTANT: RENDER_FILE should be ONLY the directory, RENDER_PATTERN should be ONLY the filename
     reaper.GetSetProjectInfo_String(0, "RENDER_FILE", dir, true)
     reaper.GetSetProjectInfo_String(0, "RENDER_PATTERN", pattern, true)
     
@@ -192,7 +252,7 @@ function RenderEngine.render_region(region, output_dir)
     -- End undo block
     reaper.Undo_EndBlock("Render Region: " .. region.name, -1)
     
-    -- Restore settings
+    -- Restore settings immediately after render
     RenderEngine._restore_render_settings(saved_settings)
     
     return success, error_msg
