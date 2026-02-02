@@ -29,14 +29,13 @@ A tool to manage region channel settings (Mono/Stereo) and export audio files wi
 ]]></description>
         <link rel="website">https://github.com/AlgernonMXF/SmartRegionManager</link>
       </metadata>
-      <version name="1.0.1" author="Unicon" time="2026-02-02T14:00:00Z">
+      <version name="1.0.2" author="Unicon" time="2026-02-02T16:30:00Z">
         <changelog><![CDATA[
-v1.0.1 - Bug Fix:
-- Fixed script registration error in ReaPack installation
-- Improved module loading with robust path handling
-- Added detailed error messages for troubleshooting
+v1.0.2 - Packaging Fix:
+- Explicitly set install path for main script in ReaPack index
+- Prevents ReaPack from treating filename as hostname
 ]]></changelog>
-        <source main="main">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/SmartRegionManager.lua</source>
+        <source main="main" file="SmartRegionManager.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/SmartRegionManager.lua</source>
         <source file="modules/config.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/modules/config.lua</source>
         <source file="modules/gui.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/modules/gui.lua</source>
         <source file="modules/region_manager.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/modules/region_manager.lua</source>
