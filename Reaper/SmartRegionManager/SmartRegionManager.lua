@@ -1,5 +1,5 @@
 --[[
-  Region Channel Exporter for Reaper
+  Smart Region Manager for Reaper
   
   A tool to manage region channel settings (Mono/Stereo) and export audio files
   with automatic channel configuration based on region settings.
@@ -42,7 +42,7 @@ dofile(script_path .. "modules/render_engine.lua")
 dofile(script_path .. "modules/gui.lua")
 
 -- Initialize
-local ctx = reaper.ImGui_CreateContext("Region Channel Exporter")
+local ctx = reaper.ImGui_CreateContext("Smart Region Manager")
 
 -- Main variables
 local is_open = true
@@ -71,7 +71,7 @@ local function main()
     GUI.apply_theme_before_window(ctx)
     
     -- Main window
-    local visible, open = reaper.ImGui_Begin(ctx, "Region Channel Exporter", true, window_flags)
+    local visible, open = reaper.ImGui_Begin(ctx, "Smart Region Manager", true, window_flags)
     is_open = open
     
     if visible then

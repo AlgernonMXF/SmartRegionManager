@@ -415,13 +415,13 @@ local function open_folder_in_explorer(folder_path)
     local os_name = reaper.GetOS() or ""
     local command = ""
     
-    if os:find("Win") then
+    if os_name:find("Win") then
         -- Windows: use cmd start to open folder reliably
         -- Normalize path separators for Windows
         folder_path = folder_path:gsub("/", "\\")
         -- "start" needs a window title, so pass empty title ""
         command = string.format('cmd.exe /C start "" "%s"', folder_path)
-    elseif os:find("OSX") then
+    elseif os_name:find("OSX") then
         -- macOS: use open command
         command = string.format('open "%s"', folder_path)
     else
@@ -435,7 +435,9 @@ local function open_folder_in_explorer(folder_path)
         return true
     else
         -- Fallback: try using os.execute (less reliable)
-        os.execute(command)
+        if _G.os and _G.os.execute then
+            _G.os.execute(command)
+        end
         return true
     end
 end
@@ -451,14 +453,14 @@ local function browse_for_folder(start_path)
         return nil
     end
 
-    local os = reaper.GetOS() or ""
+    local os_name = reaper.GetOS() or ""
     local attempted_dialog = false
 
     -- Windows: use PowerShell FolderBrowserDialog via ExecProcess
     if os_name:find("Win") and reaper.ExecProcess then
         attempted_dialog = true
         local ps_start = (start_path or ""):gsub('"', '""')
-        local temp_path = (reaper.GetResourcePath() or "") .. "\\GExportTool_browse_path.txt"
+        local temp_path = (reaper.GetResourcePath() or "") .. "\\SmartRegionManager_browse_path.txt"
         local command = string.format(
             'powershell -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms; $f=New-Object System.Windows.Forms.FolderBrowserDialog; $f.SelectedPath=\'%s\'; if($f.ShowDialog() -eq \'OK\'){Set-Content -LiteralPath \'%s\' -Value $f.SelectedPath -Encoding UTF8}"',
             ps_start,
@@ -468,12 +470,30 @@ local function browse_for_folder(start_path)
 
         local file = io.open(temp_path, "r")
         if file then
-            local selected = file:read("*l") or ""
+            local selected = file:read("*a") or ""  -- Read all content
             file:close()
             if _G.os and _G.os.remove then
                 _G.os.remove(temp_path)
             end
+            -- Clean the path: remove whitespace, newlines, and any invalid characters
             selected = selected:match("^%s*(.-)%s*$") or ""
+            -- Remove any trailing newlines or carriage returns
+            selected = selected:gsub("[\r\n]+", "")
+            -- Normalize Windows path separators
+            if os_name:find("Win") then
+                selected = selected:gsub("/", "\\")
+                -- Remove any duplicate drive letters (e.g., "D:\C:\Users\..." -> "C:\Users\...")
+                -- Find all positions of drive letters (e.g., "C:\", "D:\")
+                local drive_positions = {}
+                for pos, drive in selected:gmatch("()([A-Z]:\\)") do
+                    table.insert(drive_positions, {pos = pos, drive = drive})
+                end
+                -- If multiple drive letters found, keep only the last one
+                if #drive_positions > 1 then
+                    local last_pos = drive_positions[#drive_positions].pos
+                    selected = selected:sub(last_pos)
+                end
+            end
             if selected ~= "" then
                 return selected
             end
@@ -803,6 +823,19 @@ function GUI._draw_render_panel(ctx)
     if reaper.ImGui_Button(ctx, "Browse...##browse") then
         local selected = browse_for_folder(output_directory)
         if selected and selected ~= "" then
+            -- Clean the path before setting it
+            local os_name = reaper.GetOS() or ""
+            if os_name:find("Win") then
+                -- Remove any duplicate drive letters
+                local drive_positions = {}
+                for pos, drive in selected:gmatch("()([A-Z]:\\)") do
+                    table.insert(drive_positions, {pos = pos, drive = drive})
+                end
+                if #drive_positions > 1 then
+                    local last_pos = drive_positions[#drive_positions].pos
+                    selected = selected:sub(last_pos)
+                end
+            end
             output_directory = selected
         end
     end

@@ -3,7 +3,7 @@ chcp 65001 >nul
 setlocal enabledelayedexpansion
 
 echo ========================================
-echo   Region Channel Exporter 一键安装器
+echo   Smart Region Manager 一键安装器
 echo ========================================
 echo.
 
@@ -33,11 +33,11 @@ if not exist "%REAPER_SCRIPTS%" (
 
 echo.
 echo [2/4] 正在检查源文件...
-set "TARGET_DIR=%REAPER_SCRIPTS%\GExportTool"
+set "TARGET_DIR=%REAPER_SCRIPTS%\SmartRegionManager"
 
-if not exist "%SOURCE_DIR%RegionChannelExporter.lua" (
-    echo ❌ 错误: 找不到 RegionChannelExporter.lua
-    echo    请确保在 GExportTool 文件夹中运行此安装脚本
+if not exist "%SOURCE_DIR%SmartRegionManager.lua" (
+    echo ❌ 错误: 找不到 SmartRegionManager.lua
+    echo    请确保在 SmartRegionManager 文件夹中运行此安装脚本
     pause
     exit /b 1
 )
@@ -74,7 +74,7 @@ mkdir "%TARGET_DIR%\modules" 2>nul
 
 :: 复制文件
 echo 正在复制主脚本...
-copy "%SOURCE_DIR%RegionChannelExporter.lua" "%TARGET_DIR%\" >nul
+copy "%SOURCE_DIR%SmartRegionManager.lua" "%TARGET_DIR%\" >nul
 if errorlevel 1 (
     echo ❌ 错误: 复制主脚本失败
     pause
@@ -108,7 +108,7 @@ echo 下一步操作:
 echo 1. 打开 REAPER
 echo 2. 菜单: Actions ^> Show action list
 echo 3. 点击: New action... ^> Load ReaScript...
-echo 4. 选择: %TARGET_DIR%\RegionChannelExporter.lua
+echo 4. 选择: %TARGET_DIR%\SmartRegionManager.lua
 echo 5. 运行脚本或设置快捷键
 echo.
 echo ========================================

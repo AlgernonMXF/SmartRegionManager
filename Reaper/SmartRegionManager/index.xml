@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="GExportTool">
+<index version="1" name="SmartRegionManager">
   <category name="Region Tools">
-    <reapack name="Region Channel Exporter" type="script" desc="Manage region channel settings and batch export audio files">
+    <reapack name="Smart Region Manager" type="script" desc="Manage region channel settings and batch export audio files">
       <metadata>
-        <description><![CDATA[# Region Channel Exporter
+        <description><![CDATA[# Smart Region Manager
 
 A tool to manage region channel settings (Mono/Stereo) and export audio files with automatic channel configuration.
 
@@ -27,7 +27,7 @@ A tool to manage region channel settings (Mono/Stereo) and export audio files wi
 4. Set output directory
 5. Click "Render Selected"
 ]]></description>
-        <link rel="website">https://github.com/AIPowered/DAWPlugin</link>
+        <link rel="website">https://github.com/AlgernonMXF/SmartRegionManager</link>
       </metadata>
       <version name="1.0.2" author="AI Powered" time="2026-02-02T12:00:00Z">
         <changelog><![CDATA[
@@ -48,7 +48,7 @@ v1.0.0:
 - Batch render export
 - Optional naming suffix
 ]]></changelog>
-        <source main="main">RegionChannelExporter.lua</source>
+        <source main="main">SmartRegionManager.lua</source>
         <source file="modules/config.lua">modules/config.lua</source>
         <source file="modules/gui.lua">modules/gui.lua</source>
         <source file="modules/region_manager.lua">modules/region_manager.lua</source>

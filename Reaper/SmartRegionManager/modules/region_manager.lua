@@ -8,7 +8,7 @@
 RegionManager = {}
 
 -- Constants
-local EXT_STATE_SECTION = "RegionChannelExporter"
+local EXT_STATE_SECTION = "SmartRegionManager"
 local CHANNEL_KEY_PREFIX = "RegionChannel_"
 
 -- Runtime data

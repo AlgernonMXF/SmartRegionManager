@@ -61,9 +61,19 @@ function RenderEngine.build_filename(region, output_dir)
     local filename = base_name .. suffix .. extension
     
     if output_dir and output_dir ~= "" then
-        -- Ensure trailing separator
-        if not output_dir:match("[/\\]$") then
-            output_dir = output_dir .. "/"
+        -- Normalize path separators based on OS
+        local os_name = reaper.GetOS() or ""
+        if os_name:find("Win") then
+            output_dir = output_dir:gsub("/", "\\")
+            -- Ensure trailing separator for Windows
+            if not output_dir:match("[\\]$") then
+                output_dir = output_dir .. "\\"
+            end
+        else
+            -- Unix-like systems use forward slash
+            if not output_dir:match("/$") then
+                output_dir = output_dir .. "/"
+            end
         end
         return output_dir .. filename
     end
@@ -135,11 +145,41 @@ function RenderEngine.render_region(region, output_dir)
     -- Set output path
     local filename = RenderEngine.build_filename(region, output_dir)
     
+    -- Clean filename: remove any duplicate drive letters that might have been introduced
+    local os_name = reaper.GetOS() or ""
+    if os_name:find("Win") then
+        -- Remove any duplicate drive letters (e.g., "D:\C:\Users\..." -> "C:\Users\...")
+        local drive_positions = {}
+        for pos, drive in filename:gmatch("()([A-Z]:\\)") do
+            table.insert(drive_positions, {pos = pos, drive = drive})
+        end
+        -- If multiple drive letters found, keep only the last one
+        if #drive_positions > 1 then
+            local last_pos = drive_positions[#drive_positions].pos
+            filename = filename:sub(last_pos)
+        end
+    end
+    
     -- Split into directory and pattern
     local dir, pattern = filename:match("(.+[/\\])(.+)")
     if not dir then
         dir = ""
         pattern = filename
+    end
+    
+    -- Ensure RENDER_FILE is set to absolute path (not relative)
+    -- REAPER might prepend current working directory if path is relative
+    if os_name:find("Win") then
+        -- Ensure dir starts with drive letter for absolute path
+        if dir ~= "" and not dir:match("^[A-Z]:\\") then
+            -- If relative path, make it absolute based on output_dir
+            if output_dir and output_dir:match("^[A-Z]:\\") then
+                dir = output_dir:gsub("/", "\\")
+                if not dir:match("[\\]$") then
+                    dir = dir .. "\\"
+                end
+            end
+        end
     end
     
     reaper.GetSetProjectInfo_String(0, "RENDER_FILE", dir, true)

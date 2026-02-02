@@ -1,4 +1,4 @@
-# Region Channel Exporter for Reaper
+# Smart Region Manager for Reaper
 
 管理 Region 声道设置并自动导出匹配格式音频的 Reaper 脚本工具。
 
@@ -25,10 +25,10 @@
 2. 菜单：`Extensions` → `ReaPack` → `Import repositories...`
 3. 输入仓库地址：
    ```
-   https://raw.githubusercontent.com/AIPowered/DAWPlugin/main/Reaper/GExportTool/index.xml
+   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/Reaper/SmartRegionManager/index.xml
    ```
 4. 菜单：`Extensions` → `ReaPack` → `Browse packages`
-5. 搜索 `Region Channel Exporter`
+5. 搜索 `Smart Region Manager`
 6. 右键 → `Install`
 7. 重启 REAPER
 
@@ -45,20 +45,20 @@
 2. 按照提示完成安装
 3. 打开 REAPER，菜单：`Actions` → `Show action list`
 4. 点击 `New action...` → `Load ReaScript...`
-5. 选择 `Scripts\GExportTool\RegionChannelExporter.lua`
+5. 选择 `Scripts\SmartRegionManager\SmartRegionManager.lua`
 
 **更新脚本：**
 - 运行 `update.bat` 快速更新到最新版本
 
 ### 手动安装（备用）
 
-1. 将 `GExportTool` 文件夹复制到 REAPER Scripts 目录：
+1. 将 `SmartRegionManager` 文件夹复制到 REAPER Scripts 目录：
    - Windows: `%APPDATA%\REAPER\Scripts\`
    - macOS: `~/Library/Application Support/REAPER/Scripts/`
    - Linux: `~/.config/REAPER/Scripts/`
 2. 菜单：`Actions` → `Show action list`
 3. 点击 `New action...` → `Load ReaScript...`
-4. 选择 `RegionChannelExporter.lua`
+4. 选择 `SmartRegionManager.lua`
 
 ## 使用方法
 

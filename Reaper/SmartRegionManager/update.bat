@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 >nul
 echo ========================================
-echo   快速更新 Region Channel Exporter
+echo   快速更新 Smart Region Manager
 echo ========================================
 echo.
 echo 正在更新脚本文件...
@@ -9,7 +9,7 @@ echo.
 
 :: 获取脚本所在目录
 set "SCRIPT_DIR=%~dp0"
-set "REAPER_SCRIPTS=%APPDATA%\REAPER\Scripts\GExportTool"
+set "REAPER_SCRIPTS=%APPDATA%\REAPER\Scripts\SmartRegionManager"
 
 if not exist "%REAPER_SCRIPTS%" (
     echo ❌ 错误: 未找到已安装的脚本
@@ -19,7 +19,7 @@ if not exist "%REAPER_SCRIPTS%" (
 )
 
 echo 正在复制更新后的文件...
-copy "%SCRIPT_DIR%RegionChannelExporter.lua" "%REAPER_SCRIPTS%\" >nul
+copy "%SCRIPT_DIR%SmartRegionManager.lua" "%REAPER_SCRIPTS%\" >nul
 if errorlevel 1 (
     echo ❌ 更新失败: 无法复制主脚本
     pause
@@ -38,7 +38,7 @@ echo.
 echo 下一步：
 echo 1. 在 REAPER 中关闭脚本窗口（如果已打开）
 echo 2. 按 ? 打开 Action List
-echo 3. 搜索并运行 "RegionChannelExporter"
+echo 3. 搜索并运行 "SmartRegionManager"
 echo 4. 脚本将使用最新版本
 echo.
 pause

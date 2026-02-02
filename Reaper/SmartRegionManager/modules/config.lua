@@ -8,7 +8,7 @@
 Config = {}
 
 -- Constants
-local EXT_STATE_SECTION = "RegionChannelExporter"
+local EXT_STATE_SECTION = "SmartRegionManager"
 local SETTINGS_KEY = "Settings"
 
 -- Default settings
