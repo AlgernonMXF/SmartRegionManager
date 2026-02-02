@@ -41,11 +41,11 @@ v1.0.0 - Initial Release:
 - Dark/Light theme support (auto-detects REAPER theme)
 - Browse button compatibility (no longer requires JS_ReaScriptAPI extension)
 ]]></changelog>
-        <source main="main">SmartRegionManager.lua</source>
-        <source file="modules/config.lua">modules/config.lua</source>
-        <source file="modules/gui.lua">modules/gui.lua</source>
-        <source file="modules/region_manager.lua">modules/region_manager.lua</source>
-        <source file="modules/render_engine.lua">modules/render_engine.lua</source>
+        <source main="main">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/SmartRegionManager.lua</source>
+        <source file="modules/config.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/modules/config.lua</source>
+        <source file="modules/gui.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/modules/gui.lua</source>
+        <source file="modules/region_manager.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/modules/region_manager.lua</source>
+        <source file="modules/render_engine.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/modules/render_engine.lua</source>
       </version>
     </reapack>
   </category>
