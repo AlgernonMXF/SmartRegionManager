@@ -32,7 +32,7 @@ A tool to manage region channel settings (Mono/Stereo) and export audio files wi
       <version name="1.0.5" author="Unicon" time="2026-02-02T20:00:00Z">
         <changelog><![CDATA[
 v1.0.5 - Bug Fix & Code Cleanup:
-- Fixed "Open Folder" button not working on Windows
+- Fixed "Open Folder" button not working (UTF-8 BOM in paths)
 - Refactored theme system and path handling for cleaner code
 ]]></changelog>
         <source main="main" file="SmartRegionManager.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/SmartRegionManager.lua</source>

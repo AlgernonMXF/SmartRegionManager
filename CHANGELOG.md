@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.0.5] - 2026-02-02
 
 ### Fixed
-- Fixed "Open Folder" button not working on Windows (now uses explorer.exe directly)
+- Fixed "Open Folder" button not working on Windows
+  - Root cause: UTF-8 BOM character in saved paths from PowerShell folder dialog
+  - Added BOM stripping in path cleaning functions
 
 ### Changed
 - Refactored theme color system for cleaner code structure

@@ -317,6 +317,14 @@ local function clean_path(path)
     local os_name = reaper.GetOS() or ""
     local is_windows = os_name:find("Win") ~= nil
     
+    -- Remove UTF-8 BOM (EF BB BF) that PowerShell adds with -Encoding UTF8
+    -- BOM appears as the character "" (U+FEFF) at the start
+    path = path:gsub("^\239\187\191", "")  -- UTF-8 BOM bytes
+    path = path:gsub("^\xEF\xBB\xBF", "")  -- Alternative notation
+    path = path:gsub("^" .. string.char(0xEF, 0xBB, 0xBF), "")  -- Explicit bytes
+    path = path:gsub("^\254\255", "")      -- UTF-16 BE BOM
+    path = path:gsub("^\255\254", "")      -- UTF-16 LE BOM
+    
     -- Remove whitespace and newlines
     path = path:match("^%s*(.-)%s*$") or ""
     path = path:gsub("[\r\n]+", "")
@@ -343,6 +351,9 @@ local function open_folder_in_explorer(folder_path)
         return false
     end
 
+    -- Remove UTF-8 BOM (EF BB BF) that may be in saved paths
+    folder_path = folder_path:gsub("^\239\187\191", "")
+    
     -- Trim surrounding whitespace and newlines
     folder_path = folder_path:match("^%s*(.-)%s*$") or ""
     folder_path = folder_path:gsub("[\r\n]+", "")
