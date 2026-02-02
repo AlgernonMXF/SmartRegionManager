@@ -5,31 +5,43 @@
   with automatic channel configuration based on region settings.
   
   Author: Unicon
-  Version: 1.0.0
+  Version: 1.0.2
   Requires: Reaper 6.0+, ReaImGui extension
-  
-  Changelog v1.0.0 - Initial Release:
-  - Region list display and management
-  - Per-region Mono/Stereo channel settings
-  - Batch operations (select all, batch set channel mode)
-  - One-click render with automatic channel configuration
-  - Optional naming suffix (_Mono, _Stereo)
-  - Settings persistence in project file
-  - Dark/Light theme support (auto-detects REAPER theme)
-  - Browse button compatibility (no longer requires JS_ReaScriptAPI extension)
 --]]
 
--- Get script path at top level (must be done before any function calls)
-local script_info = debug.getinfo(1, "S")
-local script_source = script_info and script_info.source or ""
-if script_source:sub(1, 1) == "@" then
-    script_source = script_source:sub(2)
+-- Get script directory using multiple methods for maximum compatibility
+local function get_script_dir()
+    -- Method 1: debug.getinfo (standard Lua way)
+    local info = debug.getinfo(1, "S")
+    if info and info.source then
+        local source = info.source
+        if source:sub(1, 1) == "@" then
+            source = source:sub(2)
+        end
+        local dir = source:match("(.+[\\/])") or source:match("(.+/)")
+        if dir then return dir end
+    end
+    
+    -- Method 2: Use reaper.get_action_context() if available
+    if reaper.get_action_context then
+        local _, _, section, cmdID, _, _, _ = reaper.get_action_context()
+        if section and cmdID then
+            local _, filename = reaper.get_action_context()
+            if filename then
+                local dir = filename:match("(.+[\\/])") or filename:match("(.+/)")
+                if dir then return dir end
+            end
+        end
+    end
+    
+    return nil
 end
-local script_path = script_source:match("(.+[\\/])") or script_source:match("(.+/)") or ""
 
--- Check for ReaImGui
-local has_imgui = reaper.ImGui_GetVersion ~= nil
-if not has_imgui then
+-- Script directory (get it at top level)
+local SCRIPT_DIR = get_script_dir()
+
+-- Check for ReaImGui FIRST (before any other operations)
+if not reaper.ImGui_GetVersion then
     reaper.ShowMessageBox(
         "This script requires ReaImGui extension.\n\n" ..
         "Please install it via ReaPack:\n" ..
@@ -40,19 +52,21 @@ if not has_imgui then
     return
 end
 
--- Validate script path
-if script_path == "" then
+-- Validate script directory
+if not SCRIPT_DIR then
     reaper.ShowMessageBox(
         "Could not determine script location.\n\n" ..
-        "Source: " .. (script_source or "nil") .. "\n\n" ..
-        "Please reinstall the script via ReaPack.",
+        "Please try:\n" ..
+        "1. Uninstall the script in ReaPack\n" ..
+        "2. Restart REAPER\n" ..
+        "3. Reinstall the script",
         "Script Error", 0)
     return
 end
 
--- Normalize path separator for current OS
-local sep = package.config:sub(1,1) -- Gets OS path separator
+-- Normalize path for current OS
 local function normalize_path(path)
+    local sep = package.config:sub(1,1)
     if sep == "\\" then
         return path:gsub("/", "\\")
     else
@@ -60,27 +74,45 @@ local function normalize_path(path)
     end
 end
 
--- Load modules with error handling
+-- Load a module with comprehensive error handling
 local function load_module(name)
-    local path = normalize_path(script_path .. "modules/" .. name .. ".lua")
-    local chunk, err = loadfile(path)
+    local module_path = normalize_path(SCRIPT_DIR .. "modules/" .. name .. ".lua")
+    
+    -- Try to load the file
+    local chunk, load_err = loadfile(module_path)
     if not chunk then
         reaper.ShowMessageBox(
             "Failed to load module: " .. name .. "\n\n" ..
-            "Path: " .. path .. "\n\n" ..
-            "Error: " .. (err or "unknown"),
+            "Expected path:\n" .. module_path .. "\n\n" ..
+            "Error: " .. tostring(load_err) .. "\n\n" ..
+            "Please reinstall the script via ReaPack.",
             "Module Load Error", 0)
         return false
     end
-    chunk()
+    
+    -- Try to execute the chunk
+    local ok, exec_err = pcall(chunk)
+    if not ok then
+        reaper.ShowMessageBox(
+            "Failed to execute module: " .. name .. "\n\n" ..
+            "Error: " .. tostring(exec_err),
+            "Module Error", 0)
+        return false
+    end
+    
     return true
 end
 
 -- Load all required modules
-if not load_module("config") then return end
-if not load_module("region_manager") then return end
-if not load_module("render_engine") then return end
-if not load_module("gui") then return end
+local modules_ok = true
+modules_ok = modules_ok and load_module("config")
+modules_ok = modules_ok and load_module("region_manager")
+modules_ok = modules_ok and load_module("render_engine")
+modules_ok = modules_ok and load_module("gui")
+
+if not modules_ok then
+    return
+end
 
 -- Initialize
 local ctx = reaper.ImGui_CreateContext("Smart Region Manager")
