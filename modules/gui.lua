@@ -389,10 +389,24 @@ local function pop_theme_colors(ctx)
     end
 end
 
--- Initialize output directory from project path
+-- Initialize output directory from config or project path
 local function init_output_directory()
     if output_directory == "" then
-        output_directory = reaper.GetProjectPath("")
+        -- Try to load from config first
+        local saved_dir = Config.get("output_directory")
+        if saved_dir and saved_dir ~= "" then
+            output_directory = saved_dir
+        else
+            -- Fallback to project path
+            output_directory = reaper.GetProjectPath("")
+        end
+    end
+end
+
+-- Save output directory to config
+local function save_output_directory(dir)
+    if dir and dir ~= "" then
+        Config.set("output_directory", dir)
     end
 end
 
@@ -817,6 +831,7 @@ function GUI._draw_render_panel(ctx)
     local changed_dir, new_dir = reaper.ImGui_InputText(ctx, "##outputdir", output_directory)
     if changed_dir then
         output_directory = new_dir
+        save_output_directory(new_dir)
     end
     
     reaper.ImGui_SameLine(ctx)
@@ -837,6 +852,7 @@ function GUI._draw_render_panel(ctx)
                 end
             end
             output_directory = selected
+            save_output_directory(selected)
         end
     end
     

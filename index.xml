@@ -29,13 +29,11 @@ A tool to manage region channel settings (Mono/Stereo) and export audio files wi
 ]]></description>
         <link rel="website">https://github.com/AlgernonMXF/SmartRegionManager</link>
       </metadata>
-      <version name="1.0.3" author="Unicon" time="2026-02-02T17:00:00Z">
+      <version name="1.0.4" author="Unicon" time="2026-02-02T18:00:00Z">
         <changelog><![CDATA[
-v1.0.3 - Complete Fix:
-- Explicitly set install path for main script (file attribute)
-- Rewrote script initialization for better compatibility
-- Added multiple fallback methods for script path detection
-- Improved error handling with pcall protection
+v1.0.4 - Feature:
+- Output directory now persists between sessions
+- Automatically restores last used output path when reopening
 ]]></changelog>
         <source main="main" file="SmartRegionManager.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/SmartRegionManager.lua</source>
         <source file="modules/config.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/modules/config.lua</source>

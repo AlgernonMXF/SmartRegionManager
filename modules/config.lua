@@ -28,6 +28,9 @@ local DEFAULT_SETTINGS = {
     show_time_in_seconds = false,        -- Show time in seconds vs SMPTE
     auto_refresh = true,                 -- Auto-refresh region list
     theme_mode = "auto",                 -- Theme mode: "auto", "dark", or "light"
+    
+    -- Path options
+    output_directory = "",               -- Last used output directory (empty = use project path)
 }
 
 -- Current settings (runtime)
