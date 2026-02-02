@@ -91,6 +91,12 @@
 4. 运行脚本
 5. 应该能看到 Smart Region Manager 窗口
 
+### 安装成功示例
+
+通过 ReaPack 安装成功后，会显示如下提示：
+
+![安装成功](screenshots/install_success.png)
+
 ---
 
 ## 遇到问题？
