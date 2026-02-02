@@ -1,0 +1,152 @@
+# Reaper Lua ReaScript Development Rules
+
+## Project Context
+This is a Reaper DAW plugin project using Lua ReaScript with ReaImGui for GUI development.
+
+## Language & Framework
+- Primary Language: Lua 5.3+
+- GUI Framework: ReaImGui (Dear ImGui bindings for Reaper)
+- Target Platform: Reaper 6.0+ (recommend 7.0+)
+
+## Code Style Guidelines
+
+### Naming Conventions
+- Use `snake_case` for local variables and functions: `local region_count`, `function get_regions()`
+- Use `PascalCase` for module names and classes: `RegionManager`, `RenderEngine`
+- Use `UPPER_SNAKE_CASE` for constants: `DEFAULT_CHANNELS`, `EXT_STATE_SECTION`
+- Prefix private functions with underscore: `_internal_helper()`
+
+### File Structure
+```
+ModuleName.lua
+├── Local constants and imports at top
+├── Local helper functions (prefixed with _)
+├── Public module functions
+└── Module return statement at bottom
+```
+
+### Reaper API Usage
+- Always check return values from Reaper API calls
+- Use `reaper.` prefix for all Reaper API functions
+- Prefer `reaper.defer()` over busy loops for async operations
+- Use `reaper.Undo_BeginBlock()` / `reaper.Undo_EndBlock()` for undoable operations
+
+### Common Reaper API Patterns
+
+```lua
+-- Enumerate all regions
+local function get_all_regions()
+    local regions = {}
+    local marker_count = reaper.CountProjectMarkers(0)
+    for i = 0, marker_count - 1 do
+        local retval, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
+        if isrgn then
+            table.insert(regions, {
+                index = markrgnindexnumber,
+                name = name,
+                start_pos = pos,
+                end_pos = rgnend
+            })
+        end
+    end
+    return regions
+end
+
+-- Store persistent data in project
+reaper.SetProjExtState(0, "SectionName", "Key", "Value")
+
+-- Retrieve persistent data
+local retval, value = reaper.GetProjExtState(0, "SectionName", "Key")
+```
+
+### ImGui Best Practices
+- Always check if ImGui context is valid before drawing
+- Use unique IDs for widgets with `##` suffix: `reaper.ImGui_Button(ctx, "OK##dialog1")`
+- Clean up ImGui context on script exit
+- Use `reaper.ImGui_SetNextWindowSize()` for initial window size
+
+### Error Handling
+- Use `pcall()` for operations that might fail
+- Always validate user input before processing
+- Provide meaningful error messages using `reaper.ShowMessageBox()`
+
+### Performance
+- Cache expensive API calls when possible
+- Avoid calling `reaper.CountProjectMarkers()` every frame in GUI loop
+- Use local variables instead of global when possible
+- Batch undo operations together
+
+## Documentation
+- Add header comments to each file explaining its purpose
+- Document public functions with parameter descriptions
+- Use `-- TODO:` for pending work
+- Use `-- FIXME:` for known issues
+
+## Testing
+- Test with empty projects (no regions)
+- Test with many regions (100+)
+- Test undo/redo functionality
+- Test project save/load to verify ExtState persistence
+
+## Common Pitfalls to Avoid
+- Don't assume regions are sorted by position
+- Don't forget to handle UTF-8 encoding in region names
+- Don't block the main thread with long operations
+- Don't forget to call `reaper.UpdateArrange()` after visual changes
+
+## Useful Reaper API References
+- Region/Marker: `EnumProjectMarkers`, `SetProjectMarker4`, `DeleteProjectMarker`
+- Render: `GetSetProjectInfo`, `GetSetProjectInfo_String`, `Main_OnCommand`
+- ExtState: `SetProjExtState`, `GetProjExtState`, `SetExtState`, `GetExtState`
+- GUI: `ImGui_*` functions (require ReaImGui extension)
+
+## ReaScript GUI Pitfalls
+
+### Extension Dependencies
+- `JS_Dialog_BrowseForFolder` requires **JS_ReaScriptAPI** extension (separate from ReaImGui)
+- Always check if extension functions exist before calling:
+  ```lua
+  if reaper.JS_Dialog_BrowseForFolder then
+      -- use it
+  else
+      -- fallback to reaper.GetUserInputs or other method
+  end
+  ```
+- `ImGui_DestroyContext` may not exist in newer ReaImGui versions (uses garbage collection instead)
+- Always check: `if reaper.ImGui_DestroyContext then reaper.ImGui_DestroyContext(ctx) end`
+
+### Theme Detection
+- `reaper.GetThemeColor()` may return 0 or -1 if the color doesn't exist
+- Always provide fallback for theme detection:
+  ```lua
+  local bg_color = reaper.GetThemeColor("col_main_bg2", 0)
+  if bg_color == 0 or bg_color == -1 then
+      return "dark"  -- default fallback
+  end
+  ```
+- REAPER returns BGR format on Windows, RGB on other platforms
+- Extract colors: `r = color & 0xFF`, `g = (color >> 8) & 0xFF`, `b = (color >> 16) & 0xFF`
+
+### ImGui Context Lifecycle
+- Check function existence before calling cleanup functions
+- Set context to nil after cleanup for proper garbage collection:
+  ```lua
+  if ctx and reaper.ImGui_DestroyContext then
+      reaper.ImGui_DestroyContext(ctx)
+  end
+  ctx = nil
+  ```
+- Use `reaper.defer(main)` for the main loop, not while loops
+
+### ImGui Style Colors
+- Push/Pop style colors must be balanced
+- Track pushed colors count and pop them at end of frame:
+  ```lua
+  local colors_pushed = 0
+  -- push colors...
+  colors_pushed = colors_pushed + 1
+  -- at end of frame:
+  if colors_pushed > 0 then
+      reaper.ImGui_PopStyleColor(ctx, colors_pushed)
+  end
+  ```

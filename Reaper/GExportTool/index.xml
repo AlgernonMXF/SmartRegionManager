@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<index version="1" name="GExportTool">
+  <category name="Region Tools">
+    <reapack name="Region Channel Exporter" type="script" desc="Manage region channel settings and batch export audio files">
+      <metadata>
+        <description><![CDATA[# Region Channel Exporter
+
+A tool to manage region channel settings (Mono/Stereo) and export audio files with automatic channel configuration.
+
+## Features
+- Custom window to manage all project regions
+- Per-region channel mode settings (Mono/Stereo)
+- Batch operations (select all, batch set channel mode)
+- One-click render with automatic channel settings
+- Optional naming suffix (_Mono, _Stereo)
+- Settings persistence in project file
+- Dark/Light theme support (matches REAPER theme)
+
+## Requirements
+- REAPER 6.0+ (7.0+ recommended)
+- ReaImGui extension
+
+## Usage
+1. Run script from Actions menu
+2. Set channel mode for each region
+3. Select regions to export
+4. Set output directory
+5. Click "Render Selected"
+]]></description>
+        <link rel="website">https://github.com/AIPowered/DAWPlugin</link>
+      </metadata>
+      <version name="1.0.2" author="AI Powered" time="2026-02-02T12:00:00Z">
+        <changelog><![CDATA[
+v1.0.2:
+- Fixed: Browse button compatibility (no longer requires JS_ReaScriptAPI extension)
+- Fixed: Theme detection fallback for unsupported themes
+
+v1.0.1:
+- Fixed: Selection state now preserved across auto-refresh
+- Fixed: All regions selected by default on startup
+- Fixed: Close error (ImGui_DestroyContext compatibility)
+- Added: Dark/Light theme support (auto-detects REAPER theme)
+
+v1.0.0:
+- Initial release
+- Region list display and management
+- Mono/Stereo channel settings
+- Batch render export
+- Optional naming suffix
+]]></changelog>
+        <source main="main">RegionChannelExporter.lua</source>
+        <source file="modules/config.lua">modules/config.lua</source>
+        <source file="modules/gui.lua">modules/gui.lua</source>
+        <source file="modules/region_manager.lua">modules/region_manager.lua</source>
+        <source file="modules/render_engine.lua">modules/render_engine.lua</source>
+      </version>
+    </reapack>
+  </category>
+</index>

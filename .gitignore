@@ -1,0 +1,74 @@
+# Windows系统文件
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# IDE配置文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 临时文件和缓存
+*.tmp
+*.temp
+*.log
+*.cache
+*.bak
+*.backup
+*~
+
+# Reaper相关临时文件
+*.rpp-bak
+*.rpp-backup
+*.reapeaks
+*.reapindex
+
+# 编译输出文件（如果有）
+*.exe
+*.dll
+*.so
+*.dylib
+
+# 敏感信息文件
+*.key
+*.pem
+*.env
+.env.local
+.env.*.local
+config.local.*
+secrets.*
+
+# Python相关（如果有）
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Node.js相关（如果有）
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# 测试覆盖率报告
+coverage/
+*.cover
+.nyc_output
+
+# 其他
+*.orig
+*.rej
+.cache/
