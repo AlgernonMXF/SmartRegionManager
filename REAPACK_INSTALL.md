@@ -15,9 +15,15 @@
 
    **带缓存刷新的地址（推荐）：**
    ```
-   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml?ts=20260202
+   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml?ts=20260204
    ```
-   > 💡 带 `?ts=` 参数的地址可以绕过 CDN 缓存，确保每次同步都能获取最新版本。
+
+   > 💡 **ts 参数说明：**
+   > - `ts` = timestamp（时间戳）
+   > - **作用**：绕过 GitHub Raw CDN 缓存，确保获取最新版本
+   > - **格式**：`?ts=YYYYMMDD`（如 `?ts=20260204`）
+   > - **原理**：每次更改 ts 值，CDN 会认为是新请求，从而返回最新内容
+   > - **建议**：每次发布新版本后，更新 ts 值为当天日期
 
 4. 点击 `OK`
 

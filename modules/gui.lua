@@ -7,6 +7,9 @@
 
 GUI = {}
 
+-- Version
+GUI.VERSION = "1.0.6"
+
 -- UI State
 local show_settings = false
 local output_directory = ""
@@ -568,7 +571,11 @@ function GUI._draw_toolbar(ctx)
     
     -- Spacer
     local avail_width = reaper.ImGui_GetContentRegionAvail(ctx)
-    reaper.ImGui_Dummy(ctx, avail_width - 200, 0)
+    reaper.ImGui_Dummy(ctx, avail_width - 270, 0)
+    reaper.ImGui_SameLine(ctx)
+    
+    -- Version display
+    reaper.ImGui_TextDisabled(ctx, "v" .. GUI.VERSION)
     reaper.ImGui_SameLine(ctx)
     
     -- Theme button (manual theme selection)
@@ -683,15 +690,17 @@ function GUI._draw_region_list(ctx, width, height)
                         rename_focus_set = false
                     end
                 else
-                    -- Show text with double-click detection
-                    reaper.ImGui_Text(ctx, region.name)
-                    
-                    -- Check for double-click on the text
-                    if reaper.ImGui_IsItemHovered(ctx) and reaper.ImGui_IsMouseDoubleClicked(ctx, 0) then
-                        -- Start renaming
-                        rename_region_id = region.id
-                        rename_text = region.name
-                        rename_focus_set = false
+                    -- Show selectable text with double-click detection
+                    -- Use Selectable instead of Text for proper hover/click detection
+                    local selectable_flags = reaper.ImGui_SelectableFlags_AllowDoubleClick()
+                    if reaper.ImGui_Selectable(ctx, region.name .. "##name" .. region.id, false, selectable_flags) then
+                        -- Check if it was a double-click
+                        if reaper.ImGui_IsMouseDoubleClicked(ctx, 0) then
+                            -- Start renaming
+                            rename_region_id = region.id
+                            rename_text = region.name
+                            rename_focus_set = false
+                        end
                     end
                 end
                 

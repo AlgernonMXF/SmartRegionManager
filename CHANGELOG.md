@@ -5,13 +5,17 @@ All notable changes to Smart Region Manager will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.1.0] - 2026-02-04
+## [1.0.6] - 2026-02-04
 
 ### Added
 - Double-click on region name to rename directly in the list
   - Press Enter to confirm, Escape to cancel
   - Click elsewhere to cancel
   - Supports undo/redo
+- Version number display in toolbar for easy update verification
+
+### Fixed
+- Fixed double-click detection not working (changed from Text to Selectable widget)
 
 ## [1.0.5] - 2026-02-02
 
