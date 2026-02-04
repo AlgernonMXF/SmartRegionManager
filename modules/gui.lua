@@ -8,7 +8,7 @@
 GUI = {}
 
 -- Version
-GUI.VERSION = "1.0.6"
+GUI.VERSION = "1.1.1"
 
 -- UI State
 local show_settings = false

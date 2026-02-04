@@ -30,9 +30,9 @@ A tool to manage region channel settings (Mono/Stereo) and export audio files wi
 ]]></description>
         <link rel="website">https://github.com/AlgernonMXF/SmartRegionManager</link>
       </metadata>
-      <version name="1.0.6" author="Unicon" time="2026-02-04T18:00:00Z">
+      <version name="1.1.1" author="Unicon" time="2026-02-04T18:30:00Z">
         <changelog><![CDATA[
-v1.0.6 - New Feature & Fix:
+v1.1.1 - New Feature & Fix:
 - Double-click on region name to rename directly in the list
 - Press Enter to confirm, Escape to cancel
 - Supports undo/redo
