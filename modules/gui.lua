@@ -12,6 +12,11 @@ local show_settings = false
 local output_directory = ""
 local search_filter = ""
 
+-- Rename state
+local rename_region_id = nil      -- ID of region being renamed (nil = not renaming)
+local rename_text = ""            -- Current text in rename input
+local rename_focus_set = false    -- Whether we've set focus on the input
+
 -- Combo box state (for ImGui)
 local channel_combo_items = "Mono\0Stereo\0"
 
@@ -639,9 +644,56 @@ function GUI._draw_region_list(ctx, width, height)
                 reaper.ImGui_TableSetColumnIndex(ctx, 1)
                 reaper.ImGui_Text(ctx, string.format("R%d", region.id))
                 
-                -- Name column
+                -- Name column (with double-click to rename)
                 reaper.ImGui_TableSetColumnIndex(ctx, 2)
-                reaper.ImGui_Text(ctx, region.name)
+                
+                if rename_region_id == region.id then
+                    -- Show input field for renaming
+                    reaper.ImGui_SetNextItemWidth(ctx, -1)
+                    
+                    -- Set focus on first frame
+                    if not rename_focus_set then
+                        reaper.ImGui_SetKeyboardFocusHere(ctx)
+                        rename_focus_set = true
+                    end
+                    
+                    local input_flags = reaper.ImGui_InputTextFlags_EnterReturnsTrue() |
+                                       reaper.ImGui_InputTextFlags_AutoSelectAll()
+                    local enter_pressed, new_text = reaper.ImGui_InputText(ctx, "##rename" .. region.id, rename_text, input_flags)
+                    rename_text = new_text
+                    
+                    -- Check for Enter (confirm) or Escape (cancel)
+                    if enter_pressed then
+                        -- Confirm rename
+                        if rename_text ~= "" and rename_text ~= region.name then
+                            RegionManager.rename_region(region.id, rename_text)
+                        end
+                        rename_region_id = nil
+                        rename_text = ""
+                        rename_focus_set = false
+                    elseif reaper.ImGui_IsKeyPressed(ctx, reaper.ImGui_Key_Escape()) then
+                        -- Cancel rename
+                        rename_region_id = nil
+                        rename_text = ""
+                        rename_focus_set = false
+                    elseif not reaper.ImGui_IsItemActive(ctx) and rename_focus_set then
+                        -- Lost focus (clicked elsewhere) - cancel rename
+                        rename_region_id = nil
+                        rename_text = ""
+                        rename_focus_set = false
+                    end
+                else
+                    -- Show text with double-click detection
+                    reaper.ImGui_Text(ctx, region.name)
+                    
+                    -- Check for double-click on the text
+                    if reaper.ImGui_IsItemHovered(ctx) and reaper.ImGui_IsMouseDoubleClicked(ctx, 0) then
+                        -- Start renaming
+                        rename_region_id = region.id
+                        rename_text = region.name
+                        rename_focus_set = false
+                    end
+                end
                 
                 -- Start column
                 reaper.ImGui_TableSetColumnIndex(ctx, 3)

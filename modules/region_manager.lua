@@ -223,4 +223,31 @@ function RegionManager.get_selected_count()
     return count
 end
 
+-- Rename a region
+function RegionManager.rename_region(region_id, new_name)
+    if not new_name or new_name == "" then
+        return false
+    end
+    
+    -- Find the region in cache to get its position info
+    local region = RegionManager.get_region_by_id(region_id)
+    if not region then
+        return false
+    end
+    
+    -- Use SetProjectMarker4 to update the region name
+    -- Parameters: proj, markrgnindexnumber, isrgn, pos, rgnend, name, color
+    reaper.Undo_BeginBlock()
+    local success = reaper.SetProjectMarker4(0, region_id, true, region.start_pos, region.end_pos, new_name, 0, 0)
+    reaper.Undo_EndBlock("Rename Region: " .. new_name, -1)
+    
+    if success then
+        -- Update cache
+        region.name = new_name
+        return true
+    end
+    
+    return false
+end
+
 return RegionManager

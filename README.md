@@ -1,6 +1,6 @@
 # Smart Region Manager for REAPER
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/AlgernonMXF/SmartRegionManager)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/AlgernonMXF/SmartRegionManager)
 [![REAPER](https://img.shields.io/badge/REAPER-6.0+-green.svg)](https://www.reaper.fm/)
 [![License](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
 
@@ -13,6 +13,7 @@
 ## 功能特点
 
 - **Region 管理** - 显示项目中所有 Region，包含名称、时间、时长等信息
+- **快速重命名** - 双击 Region 名称直接重命名，支持撤销/重做
 - **声道设置** - 为每个 Region 单独设置声道模式（Mono/Stereo）
 - **批量操作** - 全选、批量设置声道模式
 - **一键渲染** - 自动应用对应的声道设置导出音频
@@ -36,8 +37,9 @@
    ```
    或使用带缓存刷新的地址（推荐）：
    ```
-   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml?ts=20260202
+   https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/index.xml?ts=20260204
    ```
+   > `?ts=YYYYMMDD` 参数用于绕过 CDN 缓存，确保获取最新版本
 3. `Extensions` → `ReaPack` → `Synchronize packages`
 4. `Extensions` → `ReaPack` → `Browse packages` → 搜索 `Smart Region Manager` → 安装
 5. 重启 REAPER
