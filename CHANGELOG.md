@@ -5,6 +5,14 @@ All notable changes to Smart Region Manager will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.2] - 2026-02-04
+
+### Fixed
+- Fixed rename input immediately cancelling on double-click
+
+### Changed
+- Rename editing now requires Enter to confirm or Escape to cancel
+
 ## [1.1.1] - 2026-02-04
 
 ### Added

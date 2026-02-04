@@ -1,6 +1,6 @@
 # Smart Region Manager for REAPER
 
-[![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)](https://github.com/AlgernonMXF/SmartRegionManager)
+[![Version](https://img.shields.io/badge/version-1.1.2-blue.svg)](https://github.com/AlgernonMXF/SmartRegionManager)
 [![REAPER](https://img.shields.io/badge/REAPER-6.0+-green.svg)](https://www.reaper.fm/)
 [![License](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
 

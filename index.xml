@@ -30,6 +30,18 @@ A tool to manage region channel settings (Mono/Stereo) and export audio files wi
 ]]></description>
         <link rel="website">https://github.com/AlgernonMXF/SmartRegionManager</link>
       </metadata>
+      <version name="1.1.2" author="Unicon" time="2026-02-04T21:00:00Z">
+        <changelog><![CDATA[
+v1.1.2 - Rename Fix:
+- Fixed rename input immediately cancelling on double-click
+- Rename editing now requires Enter to confirm or Escape to cancel
+]]></changelog>
+        <source main="main" file="SmartRegionManager.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/SmartRegionManager.lua</source>
+        <source file="modules/config.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/modules/config.lua</source>
+        <source file="modules/gui.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/modules/gui.lua</source>
+        <source file="modules/region_manager.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/modules/region_manager.lua</source>
+        <source file="modules/render_engine.lua">https://raw.githubusercontent.com/AlgernonMXF/SmartRegionManager/main/modules/render_engine.lua</source>
+      </version>
       <version name="1.1.1" author="Unicon" time="2026-02-04T18:30:00Z">
         <changelog><![CDATA[
 v1.1.1 - New Feature & Fix:
